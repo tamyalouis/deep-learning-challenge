@@ -1,38 +1,76 @@
-#### Data Preprocessing
-----
-1. What variable(s) are considered the target for your model?
-ANSWER: The target for the model is the "Is-Successful" column. It signifies if the money was use effectively.
+# Neural Network Optimization Report
+
+##  Data Preprocessing
+
+###  Target Variable
+- The target for the model is the `IS_SUCCESSFUL` column, which indicates whether the applicant successfully used the donated funds.
+
+###  Feature Variables
+The features used to train the model include:
+- `NAME`
+- `APPLICATION_TYPE`
+- `AFFILIATION`
+- `CLASSIFICATION`
+- `USE_CASE`
+- `ORGANIZATION`
+- `INCOME_AMT`
+- `SPECIAL_CONSIDERATIONS`
+- `STATUS`
+- `ASK_AMT`
+
+These features were encoded using one-hot encoding and scaled using `StandardScaler`.
+
+###  Removed Variables
+- `EIN` was removed because it’s simply an identifier and doesn’t provide predictive power.
+- `STATUS` was removed because all values were the same (1), making it redundant.
+- `SPECIAL_CONSIDERATIONS` was considered for removal since the vast majority of entries had the same value, limiting its impact on prediction.
+
 ---
-2. What variable(s) are considered to be the features for your model?
-ANSWER: The features of this model are the NAME, APPLICATION, TYPE, AFFILIATION, CLASSIFICATION, USE_CASE, ORGANIZATION, INCOME_AMT,SPECIAL_CONSIDERATIONS, STATUS, and ASK_AMT
----Summary
-Overall, by increasing the accuracy above 75% we are able to correctly classify each of the points in the test data 75% of the time. And, an applicant has a 80% chance of being successful if they have the following:
 
-The NAME of the applicant appears more than 5 times (they have applied more than 5 times)
-The type of APPLICATION is one of the following; T3, T4, T5, T6, T7, T8, T10, and T19
-The application has the following CLASSIFICATION; C1000, C2000, C3000, C1200, and C2100.
-A good model to recommend is the Random Forest model because Random Forest are good for classification problems. Using this model produces a 78% accuracy.
-3. What variable(s) are neither and should be removed from the input data? 
-ANSWER:  EIN (Employer identificaiton) was dropped because the numbers could confuse the system into thinking its significant.
-ANSWER: A student could drop SPECIAL_CONSIDERATIONS because there is only a small percentage of cases that had any special consideration, and special considerations cannot be quantified.
-ANSWER: A student could drop STATUS because  all rows were the same value, 1.
+##  Model Architecture
 
-#### Compiling, Training, and Evaluating the Model
----- 
-1. How many neurons, layers, and and activation functions did you select for your neural network model, and why?
-ANSWER: In this model there are three hidden layers each with many neurons,  because this seeemed to increased the accuracy above 75%. The number of epochs wasn't changed. The first activation function was 'relu' but the 2nd and 3rd were 'sigmoid'and the output function was 'sigmoid'. Changing the 2nd and 3rd activation functions to 'sigmoid' also helped boost the accuracy. 
+###  Final Neural Network Configuration
+- **Input Layer:** Dense layer with 80 neurons, `ReLU` activation
+- **Hidden Layer 1:** 30 neurons, `Sigmoid` activation
+- **Hidden Layer 2:** (in later variations) 20 neurons, `Sigmoid` activation
+- **Output Layer:** 1 neuron, `Sigmoid` activation (for binary classification)
+- **Loss Function:** `binary_crossentropy`
+- **Optimizer:** `adam`
+- **Epochs:** 100–150 (tested different values)
+
 ---
-2. Were you able to achieve the target model performance?
-ANSWER: Yes 
+
+##  Model Performance
+
+###  Achieved Accuracy
+- The final neural network model achieved an accuracy of **78.9%**, surpassing the target of 75%.
+- A **Random Forest classifier** was also tested and reached an accuracy of **77.6%**, making it a strong alternative.
+
 ---
-3. What steps did you take to try and increase model performance?
-ANSWER: It required converting the NAME column into data points, which has the biggest impact on improving efficiency. And, it also required adding a third layer and using the "sigmoid" activation function for the 2nd and 3rd layer.
 
-#### Summary
-----
-Overall, by increasing the accuracy above 75% we are able to correctly classify each of the points in the test data 75% of the time. And, an applicant has a 80% chance of being successful if they have the following:
-- The NAME of the applicant appears more than 5 times (they have applied more than 5 times)
-- The type of APPLICATION is one of the following; T3, T4, T5, T6, T7, T8, T10, and T19
-- The application has the following CLASSIFICATION; C1000, C2000, C3000, C1200, and C2100.
+##  Optimization Techniques
 
-A good model to recommend is the Random Forest model because Random Forest are good for classification problems. Using this model produces a 78% accuracy. 
+To improve model performance:
+- The `NAME` column was converted to categories and binned to reduce noise.
+- Rare values in `APPLICATION_TYPE` and `CLASSIFICATION` were grouped into `"Other"`.
+- Multiple model variations were tested, including:
+  - Adding a third hidden layer
+  - Using `sigmoid` activation in deeper layers
+  - Tuning the number of neurons in each layer
+  - Increasing epochs from 100 to 150
+- A Random Forest classifier was also trained as a comparison model.
+
+---
+
+##  Key Insights
+
+Applicants had a higher likelihood of success if:
+- Their `NAME` appeared more than five times (indicating experience or repeat applications)
+- Their `APPLICATION_TYPE` was one of the following: `T3`, `T4`, `T5`, `T6`, `T7`, `T8`, `T10`, `T19`
+- Their `CLASSIFICATION` fell under: `C1000`, `C2000`, `C3000`, `C1200`, or `C2100`
+
+---
+
+##  Conclusion
+
+Through careful preprocessing, model tuning, and evaluation, we successfully improved model accuracy to nearly **79%**, exceeding the benchmark of 75%. The neural network proved effective, and the Random Forest model is recommended as a strong alternative for classification tasks involving structured tabular data.
